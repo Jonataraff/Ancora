@@ -10,6 +10,7 @@ import br.com.fiapAncora.model.Veiculo;
 import br.com.fiapAncora.service.Validador;
 import br.com.fiapAncora.DAO.PecaDAO;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -19,19 +20,24 @@ public class Main {
         MecanicoDAO mecanicoDAO = new MecanicoDAO();
         VeiculoDAO veiculoDAO = new VeiculoDAO();
         Cliente clienteLogado = null;
-        int opcao;
-
+        int opcao = -1; // Initialize with an invalid value
         do {
             System.out.println("\n--- MENU PRINCIPAL ---");
             System.out.println("1. Cadastrar Cliente");
-            System.out.println("2. Listar Clientes");
-            System.out.println("3. Login Cliente");
-            System.out.println("4. Cadastrar Mecânico");
-            System.out.println("5. Login Mecânico");
+            System.out.println("2. Login Cliente");
+            System.out.println("3. Cadastrar Mecânico");
+            System.out.println("4. Login Mecânico");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpa o buffer
+
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine(); // Clear the buffer
+            } catch (InputMismatchException e) {
+                System.out.println("Opção inválida. Por favor, insira um número inteiro.");
+                scanner.nextLine(); // Clear the invalid input
+                opcao = -1; // Reset to an invalid value
+            }
 
             switch (opcao) {
                 case 1:
@@ -68,14 +74,8 @@ public class Main {
                     System.out.println("Cliente cadastrado com sucesso!");
                     break;
 
-                case 2:
-                    System.out.println("\n--- Listar Clientes ---");
-                    clienteDAO.listar().forEach(cliente ->
-                        System.out.println("Nome: " + cliente.getNome() + ", Email: " + cliente.getEmail())
-                    );
-                    break;
 
-                case 3:
+                case 2:
                     System.out.println("\n--- Login ---");
                     System.out.print("Email: ");
                     String loginEmail = scanner.nextLine();
@@ -129,25 +129,45 @@ public class Main {
                     break;
                                 
 
-                case 4:
+                case 3:
                     System.out.println("\n--- Cadastro de Mecânico ---");
-                    System.out.print("Nome: ");
-                    String nomeMecanico = scanner.nextLine();
-                    System.out.print("Email: ");
-                    String emailMecanico = scanner.nextLine();
-                    System.out.print("Telefone: ");
-                    String telefoneMecanico = scanner.nextLine();
-                    System.out.print("Especialidade: ");
-                    String especialidade = scanner.nextLine();
-                    System.out.print("Senha: ");
-                    String senhaMecanico = scanner.nextLine();
+
+                    String nomeMecanico;
+                    do {
+                        System.out.print("Nome: ");
+                        nomeMecanico = scanner.nextLine();
+                    } while (!Validador.validarNome(nomeMecanico));
+
+                    String emailMecanico;
+                    do {
+                        System.out.print("Email: ");
+                        emailMecanico = scanner.nextLine();
+                    } while (!Validador.validarEmail(emailMecanico));
+
+                    String telefoneMecanico;
+                    do {
+                        System.out.print("Telefone: ");
+                        telefoneMecanico = scanner.nextLine();
+                    } while (!Validador.validarTelefone(telefoneMecanico));
+
+                    String especialidade;
+                    do {
+                        System.out.print("Especialidade: ");
+                        especialidade = scanner.nextLine();
+                    } while (!Validador.validarEspecialidade(especialidade));
+
+                    String senhaMecanico;
+                    do {
+                        System.out.print("Senha: ");
+                        senhaMecanico = scanner.nextLine();
+                    } while (!Validador.validarSenha(senhaMecanico));
 
                     Mecanico novoMecanico = new Mecanico(nomeMecanico, emailMecanico, telefoneMecanico, especialidade, senhaMecanico);
                     mecanicoDAO.inserir(novoMecanico);
                     System.out.println("Mecânico cadastrado com sucesso!");
                     break;
 
-                case 5:
+                case 4:
                     System.out.println("\n--- Login Mecânico ---");
                     System.out.print("Email: ");
                     String loginEmailMecanico = scanner.nextLine();

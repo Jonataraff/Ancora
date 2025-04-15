@@ -1,9 +1,7 @@
 package br.com.fiapAncora.DAO;
-
 import br.com.fiapAncora.model.Cliente;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class ClienteDAO {
 
@@ -27,41 +25,34 @@ public class ClienteDAO {
         }
     }
 
-    public List<Cliente> listar() {
-        List<Cliente> lista = new ArrayList<>();
-        String sql = "SELECT * FROM cliente";
+ 
 
+    public Cliente autenticar(String email, String senha) {
+        String sql = "SELECT * FROM cliente WHERE email = ? AND senha = ?";
         try (Connection conn = Conexao.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                Cliente cliente = new Cliente(
-                    rs.getString("nome"),
-                    rs.getString("email"),
-                    rs.getString("telefone"),
-                    rs.getString("cpf"),
-                    rs.getString("senha")
-                );
-                cliente.setId(rs.getInt("id"));
-                lista.add(cliente);
+            stmt.setString(1, email);
+            stmt.setString(2, senha);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Cliente cliente = new Cliente(
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("telefone"),
+                        rs.getString("cpf"),
+                        rs.getString("senha")
+                    );
+                    cliente.setId(rs.getInt("id"));
+                    return cliente; // Return the authenticated client
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return lista;
+        return null; // Return null if authentication fails
     }
-
-	public Cliente autenticar(String email, String senha) {
-    for (Cliente cliente : listar()) { // Assuming listar() retrieves all clients
-        if (cliente.getEmail().equals(email) && cliente.getSenha().equals(senha)) {
-            return cliente; // Return the authenticated client
-        }
-    }
-    return null; // Return null if authentication fails
-}
 	
 }
 
