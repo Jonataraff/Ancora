@@ -55,4 +55,32 @@ public class VeiculoDAO {
 
         return veiculos;
     }
-}
+    
+    public List<String> listarVeiculosComProprietarios() {
+        List<String> veiculosComProprietarios = new ArrayList<>();
+        String sql = "SELECT v.modelo, v.marca, v.placa, v.ano, c.nome AS proprietario " +
+                     "FROM veiculos v " +
+                     "JOIN cliente c ON v.cliente_id = c.id";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String veiculoInfo = "Modelo: " + rs.getString("modelo") +
+                                     ", Marca: " + rs.getString("marca") +
+                                     ", Placa: " + rs.getString("placa") +
+                                     ", Ano: " + rs.getInt("ano") +
+                                     ", Proprietário: " + rs.getString("proprietario");
+                veiculosComProprietarios.add(veiculoInfo);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar veículos com proprietários: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return veiculosComProprietarios;
+    }
+  }
+
+

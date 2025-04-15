@@ -3,46 +3,45 @@ package br.com.fiapAncora.model;
 public class Peca {
     private int id;
     private String nome;
+    private String fabricante;
     private double preco;
-    private int mecanicoId;
 
-    public Peca(String nome, double preco, int mecanicoId) {
+    public Peca(String nome, String fabricante, double preco) {
         this.nome = nome;
+        this.fabricante = fabricante;
         this.preco = preco;
-        this.mecanicoId = mecanicoId;
     }
 
-	public int getId() {
-		return id;
-	}
+    // Getters and setters
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public double getPreco() {
-		return preco;
-	}
+    public String getFabricante() {
+        return fabricante;
+    }
 
-	public void setPreco(double preco) {
-		this.preco = preco;
-	}
+    public void setFabricante(String fabricante) {
+        this.fabricante = fabricante;
+    }
 
-	public int getMecanicoId() {
-		return mecanicoId;
-	}
+    public double getPreco() {
+        return preco;
+    }
 
-	public void setMecanicoId(int mecanicoId) {
-		this.mecanicoId = mecanicoId;
-	}
-
-    // Getters e setters
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
 }

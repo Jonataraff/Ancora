@@ -90,7 +90,6 @@ public class Main {
                         do {
                             System.out.println("\n--- MENU CLIENTE ---");
                             System.out.println("1. Cadastrar Veículo");
-                            System.out.println("2. Solicitar Peça para Reparo");
                             System.out.println("0. Logout");
                             System.out.print("Escolha uma opção: ");
                             clienteOpcao = scanner.nextInt();
@@ -98,39 +97,22 @@ public class Main {
 
                             switch (clienteOpcao) {
                                 case 1:
-                                	 System.out.println("\n--- Cadastro de Veículo ---");
-                                	    System.out.print("Modelo: ");
-                                	    String modelo = scanner.nextLine();
-                                	    System.out.print("Marca: ");
-                                	    String marca = scanner.nextLine();
-                                	    System.out.print("Placa: ");
-                                	    String placa = scanner.nextLine();
-                                	    System.out.print("Ano: ");
-                                	    int ano = scanner.nextInt();
-                                	    scanner.nextLine(); // Clear the buffer
+                                    System.out.println("\n--- Cadastro de Veículo ---");
+                                    System.out.print("Modelo: ");
+                                    String modelo = scanner.nextLine();
+                                    System.out.print("Marca: ");
+                                    String marca = scanner.nextLine();
+                                    System.out.print("Placa: ");
+                                    String placa = scanner.nextLine();
+                                    System.out.print("Ano: ");
+                                    int ano = scanner.nextInt();
+                                    scanner.nextLine(); // Clear the buffer
 
-                                	    // Create the Veiculo object
-                                	    Veiculo novoVeiculo = new Veiculo(modelo, marca, placa, ano, clienteLogado.getId());
+                                    Veiculo novoVeiculo = new Veiculo(modelo, marca, placa, ano, clienteLogado.getId());
 
-                                	    // Use veiculoDAO to insert the vehicle into the database
-                                	    veiculoDAO.inserir(novoVeiculo);
-                                	    System.out.println("Veículo cadastrado com sucesso!");
-                                	    break;
-                                case 2:
-                                	System.out.println("\n--- Solicitação de Peça para Reparo ---");
-                                    System.out.print("Nome da Peça: ");
-                                    String nomePeca = scanner.nextLine();
-                                    System.out.print("Preço estimado: ");
-                                    double precoPeca = scanner.nextDouble();
-                                    scanner.nextLine(); // Limpa o buffer
-
-                                    Peca novaPeca = new Peca(nomePeca, precoPeca, clienteLogado.getId());
-
-                                    // Save the part request to the database
-                                    PecaDAO pecaDAO = new PecaDAO();
-                                    pecaDAO.inserir(novaPeca);
-
-                                    System.out.println("Solicitação de peça registrada com sucesso!");
+                                    // Use veiculoDAO to insert the vehicle into the database
+                                    veiculoDAO.inserir(novoVeiculo);
+                                    System.out.println("Veículo cadastrado com sucesso!");
                                     break;
 
                                 case 0:
@@ -145,6 +127,7 @@ public class Main {
                         System.out.println("Email ou senha inválidos. Tente novamente.");
                     }
                     break;
+                                
 
                 case 4:
                     System.out.println("\n--- Cadastro de Mecânico ---");
@@ -175,6 +158,56 @@ public class Main {
 
                     if (mecanicoLogado != null) {
                         System.out.println("Login realizado com sucesso! Bem-vindo, " + mecanicoLogado.getNome() + "!");
+                        int mecanicoOpcao;
+                        do {
+                        	System.out.println("\n--- MENU MECÂNICO ---");
+                        	System.out.println("1. Cadastrar Peça de Reposição");
+                        	System.out.println("2. Listar Veículos que Precisam de Manutenção");
+                        	System.out.println("0. Logout");
+                        	System.out.print("Escolha uma opção: ");
+                            mecanicoOpcao = scanner.nextInt();
+                            scanner.nextLine(); // Limpa o buffer
+
+                            switch (mecanicoOpcao) {
+                            case 1:
+                                System.out.println("\n--- Cadastro de Peça de Reposição ---");
+                                System.out.print("Nome da Peça: ");
+                                String nomePeca = scanner.nextLine();
+                                System.out.print("Fabricante: ");
+                                String fabricantePeca = scanner.nextLine();
+
+                                double precoPeca = 0;
+                                boolean precoValido = false;
+                                while (!precoValido) {
+                                    System.out.print("Preço: ");
+                                    try {
+                                        String precoInput = scanner.nextLine().replace("R$", "").trim(); // Remove "R$" se presente
+                                        precoPeca = Double.parseDouble(precoInput.replace(",", ".")); // Substitui vírgula por ponto
+                                        precoValido = true; // Atualiza para true se o preço for válido
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Preço inválido. Por favor, insira um valor numérico válido.");
+                                    }
+                                }
+
+                                Peca novaPeca = new Peca(nomePeca, fabricantePeca, precoPeca);
+                                PecaDAO pecaDAO = new PecaDAO();
+                                pecaDAO.inserir(novaPeca);
+                                System.out.println("Peça cadastrada com sucesso!");
+                                break;
+
+                                case 2:
+                                	System.out.println("\n--- Veículos e seus Proprietários ---");
+                                    veiculoDAO.listarVeiculosComProprietarios().forEach(System.out::println);
+                                    break;
+
+                                case 0:
+                                    System.out.println("Logout realizado com sucesso!");
+                                    break;
+
+                                default:
+                                    System.out.println("Opção inválida!");
+                            }
+                        } while (mecanicoOpcao != 0);
                     } else {
                         System.out.println("Email ou senha inválidos. Tente novamente.");
                     }
