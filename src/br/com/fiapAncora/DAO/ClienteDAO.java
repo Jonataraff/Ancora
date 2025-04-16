@@ -1,5 +1,5 @@
-package br.com.fiapAncora.DAO;
-import br.com.fiapAncora.model.Cliente;
+package br.com.fiapancora.dao;
+import br.com.fiapancora.model.Cliente;
 import java.sql.*;
 
 

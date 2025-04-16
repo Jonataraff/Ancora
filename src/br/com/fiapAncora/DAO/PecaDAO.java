@@ -1,7 +1,5 @@
-package br.com.fiapAncora.DAO;
-import br.com.fiapAncora.model.Peca;
-import br.com.fiapAncora.model.Veiculo;
-
+package br.com.fiapancora.dao;
+import br.com.fiapancora.model.Peca;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,33 +24,49 @@ public class PecaDAO {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public List<Peca> listarTodas() {
+        List<Peca> pecas = new ArrayList<>();
+        String sql = "SELECT * FROM pecas";
 
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
-    // Method to list all parts associated with a specific mechanic ID
-	public List<Veiculo> listarVeiculosComManutencao() {
-	    List<Veiculo> veiculos = new ArrayList<>();
-	    String sql = "SELECT * FROM veiculos WHERE precisa_manutencao = 1";
+            while (rs.next()) {
+                Peca peca = new Peca(
+                        rs.getString("nome"),
+                        rs.getString("fabricante"),
+                        rs.getDouble("preco")
+                );
+                peca.setId(rs.getInt("id"));
+                pecas.add(peca);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar peças: " + e.getMessage());
+            e.printStackTrace();
+        }
 
-	    try (Connection conn = Conexao.conectar();
-	         PreparedStatement stmt = conn.prepareStatement(sql);
-	         ResultSet rs = stmt.executeQuery()) {
+        return pecas;
+    }
+	
+	public void removerPorId(int id) {
+        String sql = "DELETE FROM pecas WHERE id = ?";
 
-	        while (rs.next()) {
-	            Veiculo veiculo = new Veiculo(
-	                    rs.getString("modelo"),
-	                    rs.getString("marca"),
-	                    rs.getString("placa"),
-	                    rs.getInt("ano"),
-	                    rs.getInt("cliente_id")
-	            );
-	            veiculo.setId(rs.getInt("id"));
-	            veiculos.add(veiculo);
-	        }
-	    } catch (SQLException e) {
-	        System.err.println("Erro ao listar veículos: " + e.getMessage());
-	        e.printStackTrace();
-	    }
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-	    return veiculos;
+            stmt.setInt(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Peça removida com sucesso!");
+            } else {
+                System.out.println("Nenhuma peça encontrada com o ID informado.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao remover peça: " + e.getMessage());
+            e.printStackTrace();
+        }
 	}
- }
+}
+

@@ -1,4 +1,4 @@
-package br.com.fiapAncora.DAO;
+package br.com.fiapancora.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

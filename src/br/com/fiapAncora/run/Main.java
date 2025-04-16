@@ -1,16 +1,15 @@
-package br.com.fiapAncora.run;
-
-import br.com.fiapAncora.DAO.ClienteDAO;
-import br.com.fiapAncora.DAO.MecanicoDAO;
-import br.com.fiapAncora.DAO.VeiculoDAO;
-import br.com.fiapAncora.model.Cliente;
-import br.com.fiapAncora.model.Mecanico;
-import br.com.fiapAncora.model.Peca;
-import br.com.fiapAncora.model.Veiculo;
-import br.com.fiapAncora.service.Validador;
-import br.com.fiapAncora.DAO.PecaDAO;
-
+package br.com.fiapancora.run;
+import br.com.fiapancora.model.Cliente;
+import br.com.fiapancora.model.Mecanico;
+import br.com.fiapancora.model.Peca;
+import br.com.fiapancora.model.Veiculo;
+import br.com.fiapancora.service.Validador;
+import br.com.fiapancora.dao.ClienteDAO;
+import br.com.fiapancora.dao.MecanicoDAO;
+import br.com.fiapancora.dao.PecaDAO;
+import br.com.fiapancora.dao.VeiculoDAO;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -90,6 +89,7 @@ public class Main {
                         do {
                             System.out.println("\n--- MENU CLIENTE ---");
                             System.out.println("1. Cadastrar Veículo");
+                            System.out.println("2. Ver Peças Cadastradas");
                             System.out.println("0. Logout");
                             System.out.print("Escolha uma opção: ");
                             clienteOpcao = scanner.nextInt();
@@ -113,6 +113,16 @@ public class Main {
                                     // Use veiculoDAO to insert the vehicle into the database
                                     veiculoDAO.inserir(novoVeiculo);
                                     System.out.println("Veículo cadastrado com sucesso!");
+                                    break;
+                                case 2:
+                                    System.out.println("\n--- Peças Cadastradas ---");
+                                    PecaDAO pecaDAO = new PecaDAO();
+                                    List<Peca> pecas = pecaDAO.listarTodas();
+                                    if (pecas.isEmpty()) {
+                                        System.out.println("Nenhuma peça cadastrada.");
+                                    } else {
+                                        pecas.forEach(peca -> System.out.println("ID: " + peca.getId() + ", Nome: " + peca.getNome() + ", Fabricante: " + peca.getFabricante() + ", Preço: R$" + peca.getPreco()));
+                                    }
                                     break;
 
                                 case 0:
@@ -183,6 +193,8 @@ public class Main {
                         	System.out.println("\n--- MENU MECÂNICO ---");
                         	System.out.println("1. Cadastrar Peça de Reposição");
                         	System.out.println("2. Listar Veículos que Precisam de Manutenção");
+                        	System.out.println("3. Listar Peças Cadastradas");
+                        	System.out.println("4. Remover Peça");
                         	System.out.println("0. Logout");
                         	System.out.print("Escolha uma opção: ");
                             mecanicoOpcao = scanner.nextInt();
@@ -218,6 +230,26 @@ public class Main {
                                 case 2:
                                 	System.out.println("\n--- Veículos e seus Proprietários ---");
                                     veiculoDAO.listarVeiculosComProprietarios().forEach(System.out::println);
+                                    break;
+                                
+                                case 3:
+                                    System.out.println("\n--- Listar Peças Cadastradas ---");
+                                    PecaDAO pecaDAOListar = new PecaDAO(); // Inicializa o objeto
+                                    List<Peca> pecas = pecaDAOListar.listarTodas();
+                                    if (pecas.isEmpty()) {
+                                        System.out.println("Nenhuma peça cadastrada.");
+                                    } else {
+                                        pecas.forEach(peca -> System.out.println("ID: " + peca.getId() + ", Nome: " + peca.getNome() + ", Fabricante: " + peca.getFabricante() + ", Preço: R$" + peca.getPreco()));
+                                    }
+                                    break;
+                                    
+                                case 4:
+                                    System.out.println("\n--- Remover Peça ---");
+                                    System.out.print("Informe o ID da peça a ser removida: ");
+                                    int idPeca = scanner.nextInt();
+                                    scanner.nextLine(); // Limpa o buffer
+                                    PecaDAO pecaDAORemover = new PecaDAO(); // Inicializa o objeto
+                                    pecaDAORemover.removerPorId(idPeca);
                                     break;
 
                                 case 0:

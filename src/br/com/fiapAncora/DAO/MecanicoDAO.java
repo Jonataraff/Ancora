@@ -1,5 +1,5 @@
-package br.com.fiapAncora.DAO;
-import br.com.fiapAncora.model.Mecanico;
+package br.com.fiapancora.dao;
+import br.com.fiapancora.model.Mecanico;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

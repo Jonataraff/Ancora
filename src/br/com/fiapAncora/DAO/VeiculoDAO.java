@@ -1,9 +1,9 @@
-package br.com.fiapAncora.DAO;
+package br.com.fiapancora.dao;
+import br.com.fiapancora.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.fiapAncora.model.Veiculo;
 
 public class VeiculoDAO {
 

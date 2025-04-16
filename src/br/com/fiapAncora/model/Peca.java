@@ -1,4 +1,4 @@
-package br.com.fiapAncora.model;
+package br.com.fiapancora.model;
 
 public class Peca {
     private int id;
