@@ -90,6 +90,7 @@ public class Main {
                             System.out.println("\n--- MENU CLIENTE ---");
                             System.out.println("1. Cadastrar Veículo");
                             System.out.println("2. Ver Peças Cadastradas");
+                            System.out.println("3. Buscar Peça");
                             System.out.println("0. Logout");
                             System.out.print("Escolha uma opção: ");
                             clienteOpcao = scanner.nextInt();
@@ -122,6 +123,18 @@ public class Main {
                                         System.out.println("Nenhuma peça cadastrada.");
                                     } else {
                                         pecas.forEach(peca -> System.out.println("ID: " + peca.getId() + ", Nome: " + peca.getNome() + ", Fabricante: " + peca.getFabricante() + ", Preço: R$" + peca.getPreco()));
+                                    }
+                                    break;
+                                case 3:
+                                    System.out.println("\n--- Buscar Peça ---");
+                                    System.out.print("Digite o nome da peça: ");
+                                    String nomeBuscaCliente = scanner.nextLine();
+                                    PecaDAO pecaDAOBuscaCliente = new PecaDAO();
+                                    List<Peca> pecasEncontradasCliente = pecaDAOBuscaCliente.buscarPorNome(nomeBuscaCliente);
+                                    if (pecasEncontradasCliente.isEmpty()) {
+                                        System.out.println("Nenhuma peça encontrada com o nome informado.");
+                                    } else {
+                                        pecasEncontradasCliente.forEach(peca -> System.out.println("ID: " + peca.getId() + ", Nome: " + peca.getNome() + ", Fabricante: " + peca.getFabricante() + ", Preço: R$" + peca.getPreco()));
                                     }
                                     break;
 
@@ -194,6 +207,7 @@ public class Main {
                         	System.out.println("1. Cadastrar Peça de Reposição");
                         	System.out.println("2. Listar Veículos que Precisam de Manutenção");
                         	System.out.println("3. Listar Peças Cadastradas");
+                        	System.out.println("5. Buscar Peça");
                         	System.out.println("4. Remover Peça");
                         	System.out.println("0. Logout");
                         	System.out.print("Escolha uma opção: ");
@@ -250,6 +264,19 @@ public class Main {
                                     scanner.nextLine(); // Limpa o buffer
                                     PecaDAO pecaDAORemover = new PecaDAO(); // Inicializa o objeto
                                     pecaDAORemover.removerPorId(idPeca);
+                                    break;
+                                    
+                                case 5:
+                                    System.out.println("\n--- Buscar Peça ---");
+                                    System.out.print("Digite o nome da peça: ");
+                                    String nomeBusca = scanner.nextLine();
+                                    PecaDAO pecaDAOBusca = new PecaDAO();
+                                    List<Peca> pecasEncontradas = pecaDAOBusca.buscarPorNome(nomeBusca);
+                                    if (pecasEncontradas.isEmpty()) {
+                                        System.out.println("Nenhuma peça encontrada com o nome informado.");
+                                    } else {
+                                        pecasEncontradas.forEach(peca -> System.out.println("ID: " + peca.getId() + ", Nome: " + peca.getNome() + ", Fabricante: " + peca.getFabricante() + ", Preço: R$" + peca.getPreco()));
+                                    }
                                     break;
 
                                 case 0:

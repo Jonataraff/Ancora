@@ -1,5 +1,4 @@
 package br.com.fiapancora.run;
-
 import br.com.fiapancora.model.Cliente;
 import br.com.fiapancora.model.Mecanico;
 import br.com.fiapancora.model.Veiculo;
@@ -114,5 +113,7 @@ public class Teste {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        
     }
 }

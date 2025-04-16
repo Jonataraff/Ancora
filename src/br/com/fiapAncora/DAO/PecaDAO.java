@@ -68,5 +68,35 @@ public class PecaDAO {
             e.printStackTrace();
         }
 	}
+
+	public List<Peca> buscarPorNome(String nome) {
+	    List<Peca> pecas = new ArrayList<>();
+	    String sql = "SELECT * FROM pecas WHERE LOWER(TRANSLATE(nome, 'ÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÃÕÇáéíóúàèìòùâêîôûãõç', 'AEIOUAEIOUAEIOUAOCaeiouaeiouaeiouaoc')) " +
+	                 "LIKE LOWER(TRANSLATE(?, 'ÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÃÕÇáéíóúàèìòùâêîôûãõç', 'AEIOUAEIOUAEIOUAOCaeiouaeiouaeiouaoc'))";
+
+	    try (Connection conn = Conexao.conectar();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        stmt.setString(1, "%" + nome + "%");
+	        
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                Peca peca = new Peca(
+	                    rs.getString("nome"),
+	                    rs.getString("fabricante"),
+	                    rs.getDouble("preco")
+	                );
+	                peca.setId(rs.getInt("id"));
+	                pecas.add(peca);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Erro ao buscar peças: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    return pecas;
+	}
 }
 
